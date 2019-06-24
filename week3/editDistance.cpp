@@ -1,5 +1,6 @@
 class Solution {
 public:
+	// iterative solution
     int minDistance(string word1, string word2) {
         // min distance from 3 options at each character i and j in word1 and word2, respectively
         // insert j in front of i, then move onto j + 1 and stay at i
@@ -42,5 +43,35 @@ public:
             }
         }
         return memo[0][0];
+    }
+	
+	// recursive + memoized solution
+	int dpDistance(string word1, string word2, int i, int j, vector<vector<int>>& memo)
+    {
+        if (i == word1.size())
+        {
+            return word2.size() - j;
+        }
+        else if (j == word2.size())
+        {
+            return word1.size() - i;
+        }
+            
+        else if (memo[i][j] != -1)
+            return memo[i][j];
+        int isEqual = word1[i] == word2[j] ? 0 : 1;
+
+        memo[i][j] = 
+        min( min (
+                // insert char word2[j] into word[1]
+                1 + dpDistance(word1, word2, i, j + 1, memo),
+                // remove char word1[i]
+                1 + dpDistance(word1, word2, i + 1, j, memo)
+                 ), 
+                // replace char word1[i] with word2[j]
+                isEqual + dpDistance(word1, word2, i + 1, j + 1, memo)
+            );
+                //cout << i << ": " << word1[i] << " " << j << ": " << word2[j] << " " << memo[i][j] << endl;
+        return memo[i][j];
     }
 };
